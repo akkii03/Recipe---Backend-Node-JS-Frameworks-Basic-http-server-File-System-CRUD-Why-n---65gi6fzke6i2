@@ -53,7 +53,7 @@ app.post("/api/recipe", async (req, res) => {
   });
 });
 
-app.put("/api/recipe/:id", async (req, res) => {
+app.patch("/api/recipe/:id", async (req, res) => {
   const idS = req.params.id;
   const {title, description, category, ingredients } = await req.body;
 
@@ -65,10 +65,16 @@ app.put("/api/recipe/:id", async (req, res) => {
   connection.query(cmd, (err, result) => {
     if (err) {
       console.log("err due to ", err);
-      res.status(400).send({ message: "Recipe id is invalid" });
+      
     } else {
-      console.log("value is updated");
-      res.send({ message: "Successfully updated a recipe" });
+
+      if(result.affectedRows==1) {
+        res.send({ message: "Successfully updated a recipe" });
+      }
+      else{
+        res.status(400).send({ message: "Recipe id is invalid" });
+      }
+     
     }
   });
 });
